@@ -64,6 +64,8 @@ Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_roun
 
 Quando solicitado, usar `agents.md` como especificacao autoritativa e conduzir o projeto em fases sem pedir confirmacao entre tarefas reversiveis. Criar e manter estado curto, validar cada fase e aplicar o playbook para recuperacao. Parar apenas por decisao material ausente, ausencia de solucao tecnica segura, bloqueio persistente do provedor, falha estruturada repetida ou guarda de orcamento.
 
+Planejar e executar, nesta ordem: banco de dados, autenticacao, permissoes, pipeline de vendas, historico de atividades, API, frontend, workflows e agentes de IA. Para componente nao aplicavel, registrar `NOT_APPLICABLE` e a justificativa; nao antecipar uma camada sem decisao material registrada. Consultar `references/autonomous-project-workflow.md` para criterios de aceite por capacidade.
+
 Definir antes da primeira chamada um orcamento observavel. Ao atingir 95%, salvar estado e parar antes da proxima chamada com `BUDGET_GUARD_REACHED`. Nao estimar como exato um limite que o provedor nao expoe; para franquias gratuitas, usar teto local conservador e tratar a resposta do provedor como autoridade final.
 
 ## Uso de tokens e chaves

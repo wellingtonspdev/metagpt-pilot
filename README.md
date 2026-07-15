@@ -82,6 +82,20 @@ Quando o objetivo for desenvolver um projeto de ponta a ponta, a skill usa `agen
 
 Ela deve parar somente diante de decisao material ausente, ausencia de solucao tecnica segura, limite persistente do provedor, falha de formato repetida ou guarda preventiva de orcamento. O fluxo completo e os codigos de parada estao em [autonomous-project-workflow.md](references/autonomous-project-workflow.md).
 
+### Ordem padrao de entrega
+
+1. Banco de dados
+2. Autenticacao
+3. Permissoes
+4. Pipeline de vendas
+5. Historico de atividades
+6. API
+7. Frontend
+8. Workflows
+9. Agentes de IA
+
+Itens que nao se aplicam devem ser registrados como `NOT_APPLICABLE`; nao devem ser pulados silenciosamente nem usados para antecipar camadas posteriores.
+
 O limiar de 5% se aplica apenas a um orcamento que possa ser observado de forma confiavel. Para limites gratuitos que o provedor nao reporte como saldo de requisicoes, a skill usa um teto local conservador e nao promete uma medicao exata.
 
 ## Evidencias ja validadas

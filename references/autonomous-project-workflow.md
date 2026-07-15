@@ -21,6 +21,24 @@ Este fluxo e usado quando o operador pede que uma IA pilote o MetaGPT do inicio 
 6. Ao finalizar uma fase, validar criterios de aceite, testes, build e estado Git; atualizar `STATE.md` e `HANDOFF.md`; iniciar a proxima fase sem pedir confirmacao operacional.
 7. Ao finalizar todas as fases, executar validacao integrada, documentar resultado, registrar pendencias reais e encerrar com `COMPLETED` ou motivo padronizado.
 
+## Ordem obrigatoria de planejamento e execucao
+
+Para projetos de software, planejar e executar as capacidades nesta ordem. Cada item deve ter criterio de aceite, artefato esperado e verificacao antes de iniciar o proximo. Quando uma capacidade nao se aplicar ao projeto, registrar `NOT_APPLICABLE` com a justificativa e continuar para o proximo item; nao reordenar por conveniencia.
+
+| Ordem | Capacidade | Entrega minima esperada |
+| ---: | --- | --- |
+| 1 | Banco de dados | Modelo de dados, migrations, integridade, seed/testes de persistencia. |
+| 2 | Autenticacao | Identidade, sessao/token, protecao de credenciais e testes de acesso. |
+| 3 | Permissoes | Papeis, autorizacao por recurso/acao, negativas e testes de isolamento. |
+| 4 | Pipeline de vendas | Estados, regras de transicao, dados normalizados e testes de fluxo. |
+| 5 | Historico de atividades | Auditoria imutavel, ator, evento, data e consulta rastreavel. |
+| 6 | API | Contratos, validacao, tratamento de erro, documentacao e testes de integracao. |
+| 7 | Frontend | Fluxos de usuario consumindo somente a API, estados de erro e build. |
+| 8 | Workflows | Automacoes, filas/agendamentos quando necessarios, idempotencia e observabilidade. |
+| 9 | Agentes de IA | Ferramentas, guardrails, memoria necessaria, avaliacoes e limites de custo. |
+
+A especificacao pode detalhar ou expandir cada capacidade, mas nao deve antecipar frontend, workflows ou agentes antes das fundacoes que os sustentam. Uma excecao de ordem exige decisao material registrada em `DECISIONS.md` e deve ser reportada antes da execucao.
+
 ## Quando continuar sem perguntar
 
 Continuar autonomamente quando a proxima acao for reversivel e sustentada por `agents.md`, estado do projeto, testes ou playbook: dividir tarefa, corrigir bug, retomar container, trocar para fallback permitido, executar teste, ajustar documento ou registrar uma premissa menor.
