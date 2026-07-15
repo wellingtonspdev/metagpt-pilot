@@ -16,6 +16,7 @@ Execute o MetaGPT oficial sem alterar o codigo-fonte. Use esta skill para transf
 5. Para diagnosticar sem executar, peça: `Use $metagpt-pilot em modo somente analise e avalie esta falha: <erro>`.
 6. Antes de qualquer rodada, escolher um perfil em `references/execution-profiles.md`. Nao misturar planejamento, JSON estruturado e implementacao ampla na mesma rodada.
 7. Para mais de uma sessao, ler `references/parallel-sessions.md` antes de iniciar a segunda. Isolar projeto, container, configuracao runtime, logs e snapshots por sessao.
+8. Quando o usuario pedir desenvolvimento de ponta a ponta sem intervencoes, ler `references/autonomous-project-workflow.md` e aplicar o modo autonomo controlado.
 
 Exemplos:
 
@@ -58,6 +59,12 @@ Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_roun
 4. Comparar entregas com a especificacao original antes de uma nova rodada.
 5. Se a etapa de codigo exigir JSON monolitico e falhar em mais de um modelo, usar MetaGPT apenas para requisitos/arquitetura/revisao e implementar em fases pequenas com testes locais.
 6. Ao concluir ou parar, produzir motivo explicito: `COMPLETED`, `UPSTREAM_RATE_LIMIT`, `STRUCTURED_OUTPUT_FAILURE`, `DAILY_QUOTA_EXHAUSTED` ou `PROJECT_DECISION_REQUIRED`.
+
+## Modo autonomo controlado
+
+Quando solicitado, usar `agents.md` como especificacao autoritativa e conduzir o projeto em fases sem pedir confirmacao entre tarefas reversiveis. Criar e manter estado curto, validar cada fase e aplicar o playbook para recuperacao. Parar apenas por decisao material ausente, ausencia de solucao tecnica segura, bloqueio persistente do provedor, falha estruturada repetida ou guarda de orcamento.
+
+Definir antes da primeira chamada um orcamento observavel. Ao atingir 95%, salvar estado e parar antes da proxima chamada com `BUDGET_GUARD_REACHED`. Nao estimar como exato um limite que o provedor nao expoe; para franquias gratuitas, usar teto local conservador e tratar a resposta do provedor como autoridade final.
 
 ## Uso de tokens e chaves
 

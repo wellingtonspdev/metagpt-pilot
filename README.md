@@ -76,6 +76,14 @@ O pacote inclui um template para preparar uma segunda sessao sem compartilhar wo
 
 Consulte [parallel-sessions.md](references/parallel-sessions.md) antes de executar duas rodadas. Chaves diferentes podem separar orcamento e auditoria por projeto, mas nao ampliam rate limits globais nem devem ser usadas para contornar limites de provedor.
 
+## Desenvolvimento autonomo a partir de agents.md
+
+Quando o objetivo for desenvolver um projeto de ponta a ponta, a skill usa `agents.md` como contrato autoritativo e executa o ciclo: contexto -> plano de fase -> implementacao -> verificacao -> atualizacao de estado -> proxima fase. A IA piloto continua sem pedir confirmacao para operacoes reversiveis e baseadas no contrato.
+
+Ela deve parar somente diante de decisao material ausente, ausencia de solucao tecnica segura, limite persistente do provedor, falha de formato repetida ou guarda preventiva de orcamento. O fluxo completo e os codigos de parada estao em [autonomous-project-workflow.md](references/autonomous-project-workflow.md).
+
+O limiar de 5% se aplica apenas a um orcamento que possa ser observado de forma confiavel. Para limites gratuitos que o provedor nao reporte como saldo de requisicoes, a skill usa um teto local conservador e nao promete uma medicao exata.
+
 ## Evidencias ja validadas
 
 | Cenario | Resultado observado | Situacao |
