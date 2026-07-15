@@ -20,6 +20,7 @@ O foco e transformar pedidos amplos em rodadas pequenas, observaveis e recuperav
 | [references/execution-profiles.md](references/execution-profiles.md) | Perfis P1-P5 para planejamento, JSON pequeno, correcao, exploracao e recuperacao. |
 | [references/failure-playbook.md](references/failure-playbook.md) | Sinais de falha e a acao recomendada. |
 | [references/parallel-sessions.md](references/parallel-sessions.md) | Isolamento, concorrencia e chaves por sessao. |
+| [references/universal-invocation.md](references/universal-invocation.md) | Chamada unica, descoberta de `agents.md` e execucao faseada. |
 | [references/experience-log.md](references/experience-log.md) | Registro curto de aprendizados comprovados. |
 | [scripts/record-experience.ps1](scripts/record-experience.ps1) | Registro padronizado de experiencias sem segredos. |
 | [templates/](templates) | Template de configuracao, launcher e monitor para uma sessao isolada. |
@@ -51,17 +52,26 @@ Com base nisso, a skill passou a exigir injecao explicita da especificacao, perf
 
 ## Uso rapido
 
-1. Copie esta pasta para o diretorio global de skills do seu runtime.
-2. Leia [SKILL.md](SKILL.md) e escolha um perfil em [execution-profiles.md](references/execution-profiles.md).
-3. Informe caminho do projeto, especificacao, objetivo da rodada e se a execucao pode ser autonoma.
-4. Execute uma fase limitada, monitore logs e artefatos, e registre o resultado.
+Depois da instalacao unica do MetaGPT, Docker e desta skill, basta chamar a skill. Ela descobre o contrato do projeto, planeja, divide quando necessario, monitora o MetaGPT e continua fase a fase.
+
+Na raiz do projeto:
+
+```text
+Use $metagpt-pilot
+```
+
+Fora da raiz:
+
+```text
+Use $metagpt-pilot para iniciar o projeto em D:\Projetos\MeuProjeto
+```
+
+O projeto deve conter `agents.md` ou `AGENTS.md`. Consulte [universal-invocation.md](references/universal-invocation.md) para o contrato completo.
 
 Exemplo de pedido:
 
 ```text
-Use $metagpt-pilot para executar a fase de importacao em D:\MeuProjeto.
-Leia agents.md, crie snapshot, injete a especificacao no prompt, monitore o container
-e pare apenas por conclusao comprovada ou falha com motivo explicito.
+Use $metagpt-pilot para iniciar o projeto em D:\MeuProjeto.
 ```
 
 Para diagnostico sem executar:
@@ -97,6 +107,10 @@ Ela deve parar somente diante de decisao material ausente, ausencia de solucao t
 Itens que nao se aplicam devem ser registrados como `NOT_APPLICABLE`; nao devem ser pulados silenciosamente nem usados para antecipar camadas posteriores.
 
 O limiar de 5% se aplica apenas a um orcamento que possa ser observado de forma confiavel. Para limites gratuitos que o provedor nao reporte como saldo de requisicoes, a skill usa um teto local conservador e nao promete uma medicao exata.
+
+### Projetos pequenos e grandes
+
+Projetos pequenos podem ser planejados, implementados e validados ponta a ponta. Projetos medios ou grandes sao classificados antes da primeira rodada e divididos em fases. Ao fim de cada fase, a IA piloto salva um relatorio com escopo entregue, artefatos, validacao, falhas, consumo e proxima fase; em seguida, continua automaticamente sem exigir outro comando do usuario.
 
 ## Evidencias ja validadas
 

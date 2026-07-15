@@ -9,14 +9,12 @@ Execute o MetaGPT oficial sem alterar o codigo-fonte. Use esta skill para transf
 
 ## Como usar
 
-1. No Codex ou OpenCode, peça: `Use $metagpt-pilot para pilotar o projeto <caminho>`.
-2. No Gemini ou Antigravity, peça: `Use a skill metagpt-pilot para iniciar e monitorar o MetaGPT no projeto <caminho>`.
-3. Informe, no mesmo pedido, o caminho do projeto, o caminho do `agents.md` se estiver fora da raiz, o objetivo da rodada e se a execucao deve ser autonoma.
-4. Para retomar, informe o ultimo container, log ou diretorio de artefatos. A skill deve verificar o estado antes de reiniciar.
-5. Para diagnosticar sem executar, peça: `Use $metagpt-pilot em modo somente analise e avalie esta falha: <erro>`.
-6. Antes de qualquer rodada, escolher um perfil em `references/execution-profiles.md`. Nao misturar planejamento, JSON estruturado e implementacao ampla na mesma rodada.
-7. Para mais de uma sessao, ler `references/parallel-sessions.md` antes de iniciar a segunda. Isolar projeto, container, configuracao runtime, logs e snapshots por sessao.
-8. Quando o usuario pedir desenvolvimento de ponta a ponta sem intervencoes, ler `references/autonomous-project-workflow.md` e aplicar o modo autonomo controlado.
+1. Para iniciar um projeto na pasta atual: `Use $metagpt-pilot`.
+2. Para iniciar outro projeto: `Use $metagpt-pilot para iniciar o projeto em <caminho>`.
+3. No Gemini ou Antigravity, substitua por: `Use a skill metagpt-pilot para iniciar o projeto em <caminho>`.
+4. Descobrir automaticamente `agents.md` ou `AGENTS.md`, classificar o escopo e iniciar o modo autonomo controlado. Nao pedir modelo, perfil, prompt de fase, container ou proxima etapa ao usuario.
+5. Para retomar ou diagnosticar uma execucao existente, informar o ultimo container, log ou diretorio de artefatos. A skill deve verificar o estado antes de reiniciar.
+6. Ler `references/universal-invocation.md` antes do primeiro projeto e `references/parallel-sessions.md` antes da segunda sessao.
 
 Exemplos:
 
@@ -65,6 +63,8 @@ Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_roun
 Quando solicitado, usar `agents.md` como especificacao autoritativa e conduzir o projeto em fases sem pedir confirmacao entre tarefas reversiveis. Criar e manter estado curto, validar cada fase e aplicar o playbook para recuperacao. Parar apenas por decisao material ausente, ausencia de solucao tecnica segura, bloqueio persistente do provedor, falha estruturada repetida ou guarda de orcamento.
 
 Planejar e executar, nesta ordem: banco de dados, autenticacao, permissoes, pipeline de vendas, historico de atividades, API, frontend, workflows e agentes de IA. Para componente nao aplicavel, registrar `NOT_APPLICABLE` e a justificativa; nao antecipar uma camada sem decisao material registrada. Consultar `references/autonomous-project-workflow.md` para criterios de aceite por capacidade.
+
+Aplicar `references/universal-invocation.md` como contrato: projeto pequeno pode ser entregue ponta a ponta; projeto medio ou grande deve ser dividido em fases. Ao fim de cada fase, gerar relatorio, atualizar estado e continuar automaticamente para a proxima fase. O checkpoint nao exige novo comando do usuario.
 
 Definir antes da primeira chamada um orcamento observavel. Ao atingir 95%, salvar estado e parar antes da proxima chamada com `BUDGET_GUARD_REACHED`. Nao estimar como exato um limite que o provedor nao expoe; para franquias gratuitas, usar teto local conservador e tratar a resposta do provedor como autoridade final.
 
