@@ -1,0 +1,17 @@
+# Segredos e configuracoes locais
+.env
+.env.*
+*.key
+*.pem
+
+# Artefatos de execucao e diagnostico
+logs/
+snapshots/
+workspace/
+*.log
+
+# Cache e ambiente local
+__pycache__/
+.pytest_cache/
+.venv/
+node_modules/

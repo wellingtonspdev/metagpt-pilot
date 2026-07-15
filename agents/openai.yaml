@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pilotar MetaGPT"
+  short_description: "Executa e recupera projetos MetaGPT com economia de quota"
+  default_prompt: "Pilote o MetaGPT para este projeto, monitore os logs e pare apenas por falha comprovada."

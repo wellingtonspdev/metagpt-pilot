@@ -1,0 +1,9 @@
+# Experiencias verificadas
+
+- 2026-07-14 | Planejamento MetaGPT | Injecao direta de `agents.md` evitou PRD generico. | Manter especificacao imutavel externa.
+- 2026-07-14 | WriteCodePlanAndChange | North Mini Code e Nemotron 3 Ultra falharam apos reparos JSON repetidos. | Parar apos tres falhas e dividir a implementacao.
+- 2026-07-14 | OpenRouter | Qwen3 Coder recebeu 429 temporario do provedor Venice. | Respeitar `Retry-After`, tentar uma vez e trocar estrategia.
+- 2026-07-14 | Skill deployment | Skill validated and installed across the effective global runtime roots. | Propagate concise verified experience logs to every installed copy.
+- 2026-07-14 | Perfil P1 - planejamento de fase | Com 12k tokens e reparo desativado, PRD e desenho tecnico foram salvos; WriteTasks excedeu o limite de 12 arquivos e foi interrompido sem erro JSON. | Usar MetaGPT para requisitos e arquitetura de uma fase; consolidar o plano e implementar codigo em unidades locais testadas.
+- 2026-07-15 | Frontend React - Perfil P1 | O plano de interface foi coerente com a API, mas listou 27 arquivos apesar do teto de 10; a rodada foi encerrada antes da geracao de codigo. | Usar MetaGPT para contrato de interface e implementar frontend em unidades locais verificadas por build e proxy.
+- 2026-07-15 | Pipeline planilha-dashboard - Perfil P4 | MetaGPT confirmou que arquivo somente com cabecalho gera zero entidades normalizadas; a segunda chamada recebeu ResourceExhausted 160/32. | Validar arquivo para lote, dados normalizados, agregacao backend e UI; marcar NO_DATA_ROWS e parar P4 sem repetir em rate limit.
