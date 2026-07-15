@@ -1,0 +1,20 @@
+# Template de configuracao por sessao MetaGPT.
+# O launcher substitui __METAGPT_API_KEY__ somente no arquivo local runtime/config2.yaml.
+llm:
+  api_type: openrouter
+  base_url: "https://openrouter.ai/api/v1"
+  api_key: "__METAGPT_API_KEY__"
+  model: "__METAGPT_MODEL__"
+  max_token: __MAX_TOKEN__
+  temperature: __TEMPERATURE__
+  top_p: 1.0
+  stream: true
+  calc_usage: true
+  compress_type: "post_cut_by_token"
+  timeout: 600
+
+enable_search: false
+enable_longterm_memory: false
+repair_llm_output: __REPAIR_LLM_OUTPUT__
+language: "Portuguese"
+code_validate_k_times: 1

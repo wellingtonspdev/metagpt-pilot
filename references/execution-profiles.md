@@ -114,6 +114,13 @@ Definir antes de iniciar: `maximo de chamadas`, `maximo de modelos`, `maximo de 
 
 Trocar de modelo somente por 429 persistente, indisponibilidade ou falha de formato comprovada. Nao rotacionar chaves para ampliar franquia.
 
+## Sessoes paralelas
+
+- Cada perfil continua valendo por sessao; nao some os limites de duas sessoes como se fossem independentes quando elas usam a mesma conta, modelo ou provedor.
+- Uma chave dedicada pode separar centro de custo e auditoria. Ela nao e mecanismo para ampliar rate limit ou franquia gratuita.
+- Antes de iniciar a segunda sessao, definir um teto agregado de chamadas e manter apenas uma rodada pesada por provedor quando houver capacidade limitada.
+- Usar `references/parallel-sessions.md` para os nomes de container, diretorios e variaveis de ambiente.
+
 ## Memoria e contexto por fase
 
 Manter quatro arquivos curtos:

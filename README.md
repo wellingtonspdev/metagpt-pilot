@@ -19,8 +19,10 @@ O foco e transformar pedidos amplos em rodadas pequenas, observaveis e recuperav
 | [SKILL.md](SKILL.md) | Fluxo principal de pilotagem e criterios de encerramento. |
 | [references/execution-profiles.md](references/execution-profiles.md) | Perfis P1-P5 para planejamento, JSON pequeno, correcao, exploracao e recuperacao. |
 | [references/failure-playbook.md](references/failure-playbook.md) | Sinais de falha e a acao recomendada. |
+| [references/parallel-sessions.md](references/parallel-sessions.md) | Isolamento, concorrencia e chaves por sessao. |
 | [references/experience-log.md](references/experience-log.md) | Registro curto de aprendizados comprovados. |
 | [scripts/record-experience.ps1](scripts/record-experience.ps1) | Registro padronizado de experiencias sem segredos. |
+| [templates/](templates) | Template de configuracao, launcher e monitor para uma sessao isolada. |
 | [agents/openai.yaml](agents/openai.yaml) | Metadados para ambientes compativeis. |
 
 ## Como a skill foi desenvolvida
@@ -68,6 +70,12 @@ Para diagnostico sem executar:
 Use $metagpt-pilot em modo somente analise e avalie este log: <erro ou caminho do log>.
 ```
 
+## Sessoes paralelas
+
+O pacote inclui um template para preparar uma segunda sessao sem compartilhar workspace, container, configuracao runtime, logs ou snapshots. A chave e lida de uma variavel de ambiente exclusiva da sessao e nao entra no Git.
+
+Consulte [parallel-sessions.md](references/parallel-sessions.md) antes de executar duas rodadas. Chaves diferentes podem separar orcamento e auditoria por projeto, mas nao ampliam rate limits globais nem devem ser usadas para contornar limites de provedor.
+
 ## Evidencias ja validadas
 
 | Cenario | Resultado observado | Situacao |
@@ -110,6 +118,20 @@ Esta versao deve ser tratada como **beta interna**. Antes de considera-la consol
 - Ela nao garante que todos os modos internos do MetaGPT utilizem fallback de modelos apenas porque a lista aparece no YAML.
 - `max_token` controla saida, mas nao transforma uma tarefa monolitica em uma tarefa serializavel.
 - A qualidade do projeto continua dependente de requisitos claros, testes reais e revisao humana de decisoes materiais.
+
+## Estudos e experimentos
+
+Os documentos abaixo preservam as evidencias que deram origem a esta skill. Eles foram revisados para excluir chaves, configuracoes de runtime e logs sensiveis.
+
+| Categoria | Documento |
+| --- | --- |
+| Pesquisa | [Otimizacao de tokens e agentes](docs/research/PESQUISA_OTIMIZACAO_TOKENS_AGENTES.md) |
+| Pesquisa | [Sintese de otimizacao para MetaGPT](docs/research/SINTESE_OTIMIZACAO_TOKENS_METAGPT.md) |
+| Viabilidade | [OpenRouter e MetaGPT](docs/research/OPENROUTER_KEY_AND_METAGPT_FEASIBILITY.md) |
+| Caso real | [Relatorio de pilotagem](docs/case-studies/RELATORIO_PILOTAGEM_METAGPT.md) |
+| Caso real | [Plano de fase e importador](docs/case-studies/fase-2-shopee-pedidos-plan.md) |
+| Caso real | [Validacao de frontend](docs/case-studies/metagpt-frontend-validation-2026-07-15.md) |
+| Caso real | [Analise de fluxo de dados](docs/case-studies/analise-fluxo-importacao-dashboard-2026-07-15.md) |
 
 ## Status de distribuicao
 

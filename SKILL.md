@@ -15,6 +15,7 @@ Execute o MetaGPT oficial sem alterar o codigo-fonte. Use esta skill para transf
 4. Para retomar, informe o ultimo container, log ou diretorio de artefatos. A skill deve verificar o estado antes de reiniciar.
 5. Para diagnosticar sem executar, peça: `Use $metagpt-pilot em modo somente analise e avalie esta falha: <erro>`.
 6. Antes de qualquer rodada, escolher um perfil em `references/execution-profiles.md`. Nao misturar planejamento, JSON estruturado e implementacao ampla na mesma rodada.
+7. Para mais de uma sessao, ler `references/parallel-sessions.md` antes de iniciar a segunda. Isolar projeto, container, configuracao runtime, logs e snapshots por sessao.
 
 Exemplos:
 
@@ -33,6 +34,7 @@ Use $metagpt-pilot para analisar o log do container metagpt-abc e decidir se dev
 5. Rodar primeiro planejamento ou uma fase limitada. Evitar "implemente o MVP inteiro" quando o modelo usa saida JSON estruturada.
 6. Aplicar o perfil a uma copia da configuracao ou ao launcher apenas para a rodada atual; nao alterar a chave e nao reutilizar um perfil de exploracao para JSON ou codigo.
 7. Em importadores de planilha, validar uma amostra real pela cadeia completa: estrutura do arquivo -> contadores do lote -> entidades normalizadas -> endpoint agregado -> tela. Um lote com zero linhas deve ter estado explicito e nao ser tratado como sucesso de negocio.
+8. Em sessoes paralelas, confirmar que o nome do container, o diretorio montado e o arquivo `runtime/config2.yaml` nao pertencem a outra sessao. A chave deve ser lida de variavel de ambiente exclusiva da sessao e nunca ser escrita em Git, manifest ou log.
 
 Leia `references/failure-playbook.md` antes de escolher modelo ou tratar uma falha. Leia `references/experience-log.md` apenas para aprender com pilotos anteriores; mantenha-o curto.
 Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_round`, revisao ou reparo de JSON.
@@ -46,6 +48,7 @@ Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_roun
 5. Em 429 de provedor, respeitar `Retry-After` e fazer uma tentativa adicional no maximo. Em persistencia, trocar modelo ou aguardar capacidade; nunca trocar chaves para burlar limite.
 6. Em `JSONDecodeError`, permitir o reparo automatico. Encerrar quando tres reparos falharem, quando o mesmo papel repetir sem novo artefato, ou quando o modelo entrar em repeticao textual.
 7. Tratar erros Mermaid de Chromium como nao bloqueantes se os `.mmd` foram preservados.
+8. Se duas sessoes compartilham conta, modelo ou provedor, limitar a uma rodada pesada por vez. Em `429` ou `ResourceExhausted`, pausar novas rodadas pesadas no provedor afetado.
 
 ## Recuperacao e continuidade
 
@@ -63,6 +66,7 @@ Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_roun
 - Usar `max_token` abaixo do teto combinado de entrada e saida anunciado pelo endpoint.
 - Usar `GET /api/v1/key` para monitoramento local de credito quando necessario, sem registrar segredo.
 - Usar fallback entre modelos e backoff. Contas ou chaves adicionais nao aumentam o rate limit global da OpenRouter.
+- Chaves por projeto podem separar orcamento e auditoria, mas nao devem ser alternadas para burlar quota, RPM ou bloqueio de provedor.
 - Nunca colocar chave de gerenciamento no MetaGPT. Usar chaves de gerenciamento somente para administracao e rotacao de seguranca.
 
 ## Aprendizado continuo
