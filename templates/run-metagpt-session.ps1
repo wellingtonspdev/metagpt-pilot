@@ -7,7 +7,13 @@ param(
     [string]$ProjectName,
     [string]$SpecificationPath = "",
     [string]$ApiKeyEnvironmentVariable = "METAGPT_SESSION_2_API_KEY",
-    [string]$Model = "qwen/qwen3-coder:free",
+    [string]$Model = "Auto",
+    [ValidateSet("Auto", "Planning", "Architecture", "Implementation", "Review", "Fast")]
+    [string]$SelectionPhase = "Auto",
+    [string]$SelectionRole = "",
+    [ValidateSet("Auto", "Low", "Medium", "High")]
+    [string]$SelectionComplexity = "Auto",
+    [string]$ModelSelectorPath = "C:\Users\Wellington\.codex\skills\metagpt-pilot\scripts\select-metagpt-model.ps1",
     [ValidateSet("P1", "P2", "P3", "P4", "P5")]
     [string]$Profile = "P1",
     [int]$Rounds = 3,
@@ -65,6 +71,25 @@ $specification = Get-Content -LiteralPath $specPath -Raw -Encoding UTF8
 $specSnapshot = Join-Path $specificationsPath "$timestamp-$([IO.Path]::GetFileName($specPath))"
 Copy-Item -LiteralPath $specPath -Destination $specSnapshot -Force
 
+$modelSelection = $null
+$selectionMode = "explicit"
+if ($Model -eq "Auto") {
+    if (-not (Test-Path -LiteralPath $ModelSelectorPath)) {
+        throw "Model selector not found: $ModelSelectorPath. Pass -Model explicitly or install metagpt-pilot globally."
+    }
+    try {
+        $selectionRaw = & $ModelSelectorPath -ApiKey $apiKey -Phase $SelectionPhase -Role $SelectionRole -Task "$Requirement`n$specification" -Complexity $SelectionComplexity
+        $modelSelection = $selectionRaw | ConvertFrom-Json
+    } catch {
+        throw "Automatic model selection failed: $($_.Exception.Message)"
+    }
+    if ([string]::IsNullOrWhiteSpace($modelSelection.selected_model)) {
+        throw "Automatic model selection returned no model. Pass -Model explicitly after inspecting the proxy."
+    }
+    $Model = $modelSelection.selected_model
+    $selectionMode = "auto"
+}
+
 $config = Get-Content -LiteralPath $templatePath -Raw -Encoding UTF8
 $config = $config.Replace("__METAGPT_API_KEY__", $apiKey)
 $config = $config.Replace("__METAGPT_MODEL__", $Model)
@@ -94,6 +119,10 @@ $manifest = [ordered]@{
     project_root = (Resolve-Path -LiteralPath $ProjectRoot).Path
     specification_snapshot = $specSnapshot
     model = $Model
+    model_selection_mode = $selectionMode
+    selection_route = if ($modelSelection) { $modelSelection.route } else { "" }
+    selection_reason = if ($modelSelection) { $modelSelection.reason } else { "Explicit model" }
+    fallback_models = if ($modelSelection) { @($modelSelection.fallback_models) } else { @() }
     profile = $Profile
     rounds = $Rounds
     api_key_environment_variable = $ApiKeyEnvironmentVariable

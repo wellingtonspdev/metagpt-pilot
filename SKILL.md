@@ -12,7 +12,7 @@ Execute o MetaGPT oficial sem alterar o codigo-fonte. Use esta skill para transf
 1. Para iniciar um projeto na pasta atual: `Use $metagpt-pilot`.
 2. Para iniciar outro projeto: `Use $metagpt-pilot para iniciar o projeto em <caminho>`.
 3. No Gemini ou Antigravity, substitua por: `Use a skill metagpt-pilot para iniciar o projeto em <caminho>`.
-4. Descobrir automaticamente `agents.md` ou `AGENTS.md`, classificar o escopo e iniciar o modo autonomo controlado. Nao pedir modelo, perfil, prompt de fase, container ou proxima etapa ao usuario.
+4. Descobrir automaticamente `agents.md` ou `AGENTS.md`, classificar o escopo e iniciar o modo autonomo controlado. Selecionar o modelo automaticamente por rodada a partir de fase, papel, tarefa, complexidade, catalogo do proxy e health check; nao pedir modelo, perfil, prompt de fase, container ou proxima etapa ao usuario.
 5. Para retomar ou diagnosticar uma execucao existente, informar o ultimo container, log ou diretorio de artefatos. A skill deve verificar o estado antes de reiniciar.
 6. Ler `references/universal-invocation.md` antes do primeiro projeto e `references/parallel-sessions.md` antes da segunda sessao.
 
@@ -37,6 +37,18 @@ Use $metagpt-pilot para analisar o log do container metagpt-abc e decidir se dev
 
 Leia `references/failure-playbook.md` antes de escolher modelo ou tratar uma falha. Leia `references/experience-log.md` apenas para aprender com pilotos anteriores; mantenha-o curto.
 Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_round`, revisao ou reparo de JSON.
+Leia `references/model-routing.md` antes de iniciar uma rodada com selecao automatica.
+
+## Selecao automatica de modelo
+
+1. Tratar um modelo explicito como sobrescrita; somente usar selecao automatica quando o launcher receber `-Model Auto` ou quando nenhum modelo tiver sido indicado.
+2. Como MetaGPT usa um unico modelo por container, selecionar por rodada/fase, nunca fingir troca por papel dentro de uma equipe ja iniciada. Para especializar Product Manager, Architect, Engineer ou QA, dividir o trabalho em rodadas pequenas.
+3. Derivar a rota por fase, papel, tarefa e dificuldade: `Planning`, `Architecture`, `Implementation`, `Review` ou `Fast`.
+4. Executar `scripts/select-metagpt-model.ps1` contra o proxy configurado. Consultar catalogo e fazer no maximo dois probes curtos, sequenciais, sem streaming.
+5. Registrar no manifesto rota, modelo, fallbacks, status e latencia dos probes; nunca registrar chave, header ou prompt completo.
+6. Em 429, timeout ou 5xx, parar a rodada improdutiva, preservar a workspace e selecionar o proximo fallback com o modelo falho excluido. Em 400/401/403/404/410, marcar a rota como indisponivel/incompativel ate novo health check.
+7. Nao usar o catalogo como prova de saude: um modelo listado pode falhar em rota, quota ou compatibilidade. Nao testar todos os modelos antes de cada fase.
+8. Registrar fatos em `experience-log.md`. Alterar a matriz somente apos tres rodadas comparaveis aprovadas em testes.
 
 ## Execucao e monitoramento
 
