@@ -180,3 +180,16 @@ O launcher da sessao 2 foi executado com `-Model Auto`, `-SelectionPhase Plannin
 
 O experimento confirma o mecanismo de selecao e auditoria. Ainda nao confirma que Laguna M.1 e Nemotron Ultra superam alternativas em fases completas de implementacao/revisao; isso permanece no plano de experimentos.
 
+## Experimento de gerenciamento de catalogo
+
+O seletor passou a consultar o catalogo antes de cada rodada e a comparar os IDs com um registro versionado de evidencias. No snapshot de 2026-07-16 foram observados 34 modelos, seis candidatos habilitados pela matriz e 23 modelos nao revisados. Os nao revisados foram registrados no manifesto, mas nao entraram no roteamento automatico.
+
+Foi validada tambem a classificacao por papel e atividade:
+
+| Entrada | Rota derivada | Modelo selecionado |
+| --- | --- | --- |
+| Engineer, implementacao de endpoint, migracao e testes, alta complexidade | `Implementation` | `openrouter/poolside/laguna-m.1:free` |
+| QA, revisao de regressao e diagnostico de falha, alta complexidade | `Review` | `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free` |
+
+O registro nao promove modelos novos automaticamente. A promocao exige pesquisa de fontes oficiais e independentes, seguida de tres rodadas comparaveis com artefatos e testes aprovados.
+

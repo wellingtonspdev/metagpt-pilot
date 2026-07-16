@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "last_researched": "2026-07-16",
+  "research_refresh_days": 14,
+  "models": [
+    {
+      "id": "gemini/gemini-3.1-flash-lite-preview",
+      "enabled": true,
+      "routes": { "Planning": 1, "Architecture": 3, "Fast": 3 },
+      "evidence": "local_metagpt_smoke; official_google_long_context",
+      "risk": "Use selected context; large nominal context does not guarantee retrieval."
+    },
+    {
+      "id": "nvidia/deepseek-ai/deepseek-v4-flash",
+      "enabled": true,
+      "routes": { "Architecture": 1, "Implementation": 4, "Review": 2 },
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "risk": "Reasoning variant is verbose; constrain output and phase scope."
+    },
+    {
+      "id": "openrouter/poolside/laguna-m.1:free",
+      "enabled": true,
+      "routes": { "Implementation": 1 },
+      "evidence": "local_chat_smoke; openrouter_capabilities; vendor_benchmarks",
+      "risk": "Free route may train on inputs/outputs; tool-call reliability requires fallback."
+    },
+    {
+      "id": "openrouter/cohere/north-mini-code:free",
+      "enabled": true,
+      "routes": { "Planning": 3, "Implementation": 2, "Review": 3, "Fast": 1 },
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "risk": "Use for bounded coding work; independent agentic evidence is weaker than coding evidence."
+    },
+    {
+      "id": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "enabled": true,
+      "routes": { "Planning": 2, "Architecture": 2, "Implementation": 3, "Review": 1 },
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "risk": "Use OpenRouter route only; direct NVIDIA route failed locally."
+    },
+    {
+      "id": "openrouter/poolside/laguna-xs-2.1:free",
+      "enabled": true,
+      "routes": { "Fast": 2 },
+      "evidence": "local_chat_smoke; openrouter_capabilities",
+      "risk": "Require phase-level validation before promotion to implementation primary."
+    },
+    {
+      "id": "openrouter/google/gemma-4-26b-a4b-it:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke_only",
+      "risk": "Available but lacks comparative evidence in this registry."
+    },
+    {
+      "id": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke_only",
+      "risk": "Available but needs research and phase comparison."
+    },
+    {
+      "id": "openrouter/nvidia/nemotron-3-nano-30b-a3b:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke_only",
+      "risk": "Available but not promoted for MetaGPT orchestration."
+    },
+    {
+      "id": "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke_only",
+      "risk": "Available but not promoted for text-only MetaGPT work."
+    },
+    {
+      "id": "openrouter/tencent/hy3:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke_only",
+      "risk": "Available but needs validated comparative evidence."
+    }
+  ]
+}

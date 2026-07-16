@@ -5,6 +5,8 @@ param(
 
     [string]$BaseUrl = "http://127.0.0.1:20128/v1",
 
+    [string]$RegistryPath = (Join-Path $PSScriptRoot "..\references\model-registry.json"),
+
     [ValidateSet("Auto", "Planning", "Architecture", "Implementation", "Review", "Fast")]
     [string]$Phase = "Auto",
 
@@ -31,8 +33,9 @@ function Resolve-Route {
     $text = ("$RequestedRole $RequestedTask").ToLowerInvariant()
     if ($text -match "prd|requisit|backlog|produto|product manager|planej|alice") { return "Planning" }
     if ($text -match "arquitet|architecture|diagrama|decisao tecnica|investig|root cause|bob") { return "Architecture" }
-    if ($text -match "review|qa|teste|test|qualidade|bug fix|correc|eve") { return "Review" }
+    if ($text -match "review|qa|qualidade|diagnostic|regress|bug fix|correc|eve") { return "Review" }
     if ($text -match "documentacao|classific|extrac|renome|boilerplate|simples") { return "Fast" }
+    if ($text -match "implement|codigo|code|backend|frontend|api|endpoint|banco|database|migrat|autentic|permiss|workflow|agent|engineer|developer|alex") { return "Implementation" }
     if ($RequestedComplexity -eq "High") { return "Architecture" }
     return "Implementation"
 }
@@ -56,41 +59,32 @@ function Get-FailureDetail {
     return [pscustomobject]@{ status = $status; detail = $detail }
 }
 
-$route = Resolve-Route -RequestedPhase $Phase -RequestedRole $Role -RequestedTask $Task -RequestedComplexity $Complexity
-$candidatesByRoute = @{
-    Planning = @(
-        "gemini/gemini-3.1-flash-lite-preview",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "openrouter/cohere/north-mini-code:free"
-    )
-    Architecture = @(
-        "nvidia/deepseek-ai/deepseek-v4-flash",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "gemini/gemini-3.1-flash-lite-preview"
-    )
-    Implementation = @(
-        "openrouter/poolside/laguna-m.1:free",
-        "openrouter/cohere/north-mini-code:free",
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "nvidia/deepseek-ai/deepseek-v4-flash"
-    )
-    Review = @(
-        "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
-        "nvidia/deepseek-ai/deepseek-v4-flash",
-        "openrouter/cohere/north-mini-code:free"
-    )
-    Fast = @(
-        "openrouter/cohere/north-mini-code:free",
-        "openrouter/poolside/laguna-xs-2.1:free",
-        "gemini/gemini-3.1-flash-lite-preview"
-    )
+function Get-RoutePriority {
+    param($Record, [string]$RouteName)
+
+    if (-not $Record.routes) { return $null }
+    $property = $Record.routes.PSObject.Properties[$RouteName]
+    if (-not $property) { return $null }
+    return [int]$property.Value
 }
+
+$route = Resolve-Route -RequestedPhase $Phase -RequestedRole $Role -RequestedTask $Task -RequestedComplexity $Complexity
+if (-not (Test-Path -LiteralPath $RegistryPath)) { throw "Model registry not found: $RegistryPath" }
+$registry = Get-Content -LiteralPath $RegistryPath -Raw -Encoding UTF8 | ConvertFrom-Json
 
 $headers = @{ Authorization = "Bearer $ApiKey"; "Content-Type" = "application/json" }
 $endpoint = $BaseUrl.TrimEnd("/")
 $catalog = Invoke-RestMethod -Uri "$endpoint/models" -Headers $headers -Method Get -TimeoutSec 20
 $available = @($catalog.data | ForEach-Object { $_.id } | Where-Object { $_ } | Sort-Object -Unique)
-$candidates = @($candidatesByRoute[$route] | Where-Object { $_ -in $available -and $_ -notin $ExcludeModels })
+$known = @($registry.models | ForEach-Object { $_.id })
+$lastResearch = [DateTime]::Parse($registry.last_researched)
+$researchStale = ((Get-Date).ToUniversalTime() - $lastResearch.ToUniversalTime()).TotalDays -gt [int]$registry.research_refresh_days
+$candidates = @(
+    $registry.models |
+        Where-Object { $_.enabled -and $_.id -in $available -and $_.id -notin $ExcludeModels -and $null -ne (Get-RoutePriority -Record $_ -RouteName $route) } |
+        Sort-Object { Get-RoutePriority -Record $_ -RouteName $route } |
+        ForEach-Object { $_.id }
+)
 
 if ($candidates.Count -eq 0) {
     throw "No available candidates for route $route after exclusions. Refresh provider configuration or pass -Model explicitly."
@@ -135,4 +129,9 @@ $fallbacks = @($candidates | Where-Object { $_ -ne $selected })
     complexity = $Complexity
     reason = "Selected by route $route after a local 9Router health check."
     probes = $probes
+    catalog_observed_at = (Get-Date).ToUniversalTime().ToString("o")
+    catalog_count = $available.Count
+    unreviewed_models = @($available | Where-Object { $_ -notin $known })
+    research_stale = $researchStale
+    registry_last_researched = $registry.last_researched
 } | ConvertTo-Json -Depth 6 -Compress

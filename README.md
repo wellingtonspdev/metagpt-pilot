@@ -22,9 +22,12 @@ O foco e transformar pedidos amplos em rodadas pequenas, observaveis e recuperav
 | [references/parallel-sessions.md](references/parallel-sessions.md) | Isolamento, concorrencia e chaves por sessao. |
 | [references/universal-invocation.md](references/universal-invocation.md) | Chamada unica, descoberta de `agents.md` e execucao faseada. |
 | [references/model-routing.md](references/model-routing.md) | Matriz de selecao por fase, health check e fallback de modelos. |
+| [references/model-research-protocol.md](references/model-research-protocol.md) | Pesquisa por diferenca de catalogo, comparacao e promocao controlada. |
+| [references/model-registry.json](references/model-registry.json) | Registro versionado de evidencias, riscos e prioridades de roteamento. |
 | [references/experience-log.md](references/experience-log.md) | Registro curto de aprendizados comprovados. |
 | [scripts/record-experience.ps1](scripts/record-experience.ps1) | Registro padronizado de experiencias sem segredos. |
 | [scripts/select-metagpt-model.ps1](scripts/select-metagpt-model.ps1) | Selecao local por fase, papel, tarefa, complexidade e saude do proxy. |
+| [scripts/refresh-metagpt-model-catalog.ps1](scripts/refresh-metagpt-model-catalog.ps1) | Snapshot seguro do catalogo, modelos novos e evidencia vencida. |
 | [templates/](templates) | Template de configuracao, launcher e monitor para uma sessao isolada. |
 | [agents/openai.yaml](agents/openai.yaml) | Metadados para ambientes compativeis. |
 
@@ -96,6 +99,8 @@ O launcher usa `-Model Auto` como padrao. Antes de iniciar uma rodada, ele le fa
 | Subtarefa curta | North Mini Code | Laguna XS 2.1, Gemini Flash Lite |
 
 O MetaGPT usa um unico modelo por container. Para aplicar modelos diferentes a Product Manager, Architect, Engineer e QA, o piloto divide o trabalho em rodadas/fases e seleciona o modelo antes de cada rodada. Nao ha troca invisivel de modelo no meio de uma equipe em execucao.
+
+Antes de cada rodada, o seletor consulta o catalogo do 9Router. Modelos novos permanecem fora da matriz critica ate pesquisa em fontes oficiais/independentes e experimentos locais. A pesquisa e acionada por diferenca de catalogo ou evidencia vencida, nao por toda chamada.
 
 Para fixar um modelo em uma rodada especifica, passe `-Model "<id-do-modelo>"`; isso desativa a selecao automatica somente naquela rodada. Consulte [model-routing.md](references/model-routing.md) para limites, health checks e fallbacks.
 

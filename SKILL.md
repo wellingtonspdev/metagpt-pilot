@@ -37,7 +37,7 @@ Use $metagpt-pilot para analisar o log do container metagpt-abc e decidir se dev
 
 Leia `references/failure-playbook.md` antes de escolher modelo ou tratar uma falha. Leia `references/experience-log.md` apenas para aprender com pilotos anteriores; mantenha-o curto.
 Leia `references/execution-profiles.md` antes de alterar `config2.yaml`, `n_round`, revisao ou reparo de JSON.
-Leia `references/model-routing.md` antes de iniciar uma rodada com selecao automatica.
+Leia `references/model-routing.md` antes de iniciar uma rodada com selecao automatica. Leia `references/model-research-protocol.md` quando o catalogo mudar, a pesquisa estiver vencida ou um modelo novo puder ser promovido.
 
 ## Selecao automatica de modelo
 
@@ -45,10 +45,11 @@ Leia `references/model-routing.md` antes de iniciar uma rodada com selecao autom
 2. Como MetaGPT usa um unico modelo por container, selecionar por rodada/fase, nunca fingir troca por papel dentro de uma equipe ja iniciada. Para especializar Product Manager, Architect, Engineer ou QA, dividir o trabalho em rodadas pequenas.
 3. Derivar a rota por fase, papel, tarefa e dificuldade: `Planning`, `Architecture`, `Implementation`, `Review` ou `Fast`.
 4. Executar `scripts/select-metagpt-model.ps1` contra o proxy configurado. Consultar catalogo e fazer no maximo dois probes curtos, sequenciais, sem streaming.
-5. Registrar no manifesto rota, modelo, fallbacks, status e latencia dos probes; nunca registrar chave, header ou prompt completo.
-6. Em 429, timeout ou 5xx, parar a rodada improdutiva, preservar a workspace e selecionar o proximo fallback com o modelo falho excluido. Em 400/401/403/404/410, marcar a rota como indisponivel/incompativel ate novo health check.
-7. Nao usar o catalogo como prova de saude: um modelo listado pode falhar em rota, quota ou compatibilidade. Nao testar todos os modelos antes de cada fase.
-8. Registrar fatos em `experience-log.md`. Alterar a matriz somente apos tres rodadas comparaveis aprovadas em testes.
+5. Consultar `unreviewed_models` e `research_stale` retornados pelo seletor. Antes de promover modelo novo ou evidencia vencida, pesquisar fontes oficiais, benchmarks independentes e telemetria do provedor conforme `model-research-protocol.md`; registrar a comparacao no registry sem segredos.
+6. Registrar no manifesto rota, modelo, fallbacks, status e latencia dos probes, diferencas do catalogo e idade da pesquisa; nunca registrar chave, header ou prompt completo.
+7. Em 429, timeout ou 5xx, parar a rodada improdutiva, preservar a workspace e selecionar o proximo fallback com o modelo falho excluido. Em 400/401/403/404/410, marcar a rota como indisponivel/incompativel ate novo health check.
+8. Nao usar o catalogo como prova de saude: um modelo listado pode falhar em rota, quota ou compatibilidade. Nao testar todos os modelos antes de cada fase.
+9. Registrar fatos em `experience-log.md`. Alterar a matriz somente apos tres rodadas comparaveis aprovadas em testes.
 
 ## Execucao e monitoramento
 
