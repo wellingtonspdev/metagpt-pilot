@@ -79,6 +79,190 @@
       "routes": {},
       "evidence": "local_chat_smoke_only",
       "risk": "Available but needs validated comparative evidence."
+    },
+    {
+      "id": "gemini/gemini-3.1-pro-preview",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_google_agentic_coding; local_429",
+      "status": "temporary_unavailable",
+      "risk": "Strong published capability, but provider quota prevented local validation."
+    },
+    {
+      "id": "gemini/gemini-3-flash-preview",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_google_agentic_workflows; local_timeout",
+      "status": "temporary_unavailable",
+      "risk": "Timed out locally; recheck before any phase experiment."
+    },
+    {
+      "id": "gemini/gemma-4-31b-it",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; official_google_hosted_gemma; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "Chat route works, but no MetaGPT phase comparison yet."
+    },
+    {
+      "id": "nvidia/deepseek-ai/deepseek-v4-pro",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "Potential high-complexity candidate; keep disabled until phase tests measure output discipline and tool compatibility."
+    },
+    {
+      "id": "nvidia/minimaxai/minimax-m2.7",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "Strong independent composite score, but no MetaGPT structured-output validation."
+    },
+    {
+      "id": "nvidia/minimaxai/minimax-m3",
+      "enabled": false,
+      "routes": {},
+      "evidence": "artificial_analysis_independent; local_400_degraded",
+      "status": "misconfigured",
+      "risk": "Upstream function was degraded; do not route until provider health recovers."
+    },
+    {
+      "id": "nvidia/moonshotai/kimi-k2.6",
+      "enabled": false,
+      "routes": {},
+      "evidence": "artificial_analysis_independent; local_404",
+      "status": "misconfigured",
+      "risk": "Provider function was unavailable for this account despite external model evidence."
+    },
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b",
+      "enabled": false,
+      "routes": {},
+      "evidence": "artificial_analysis_independent; local_404",
+      "status": "misconfigured",
+      "risk": "Direct NVIDIA route failed; the validated OpenRouter alias remains the eligible route."
+    },
+    {
+      "id": "nvidia/parakeet-ctc-1.1b-asr",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_nvidia_asr; local_404",
+      "status": "incompatible",
+      "risk": "Speech-to-text model, not a chat or coding agent."
+    },
+    {
+      "id": "nvidia/z-ai/glm-5.2",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "High capability but reported token-heavy behavior; require bounded-output phase tests."
+    },
+    {
+      "id": "ollama/glm-4.7-flash",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_404",
+      "status": "misconfigured",
+      "risk": "Model absent in the connected Ollama service."
+    },
+    {
+      "id": "ollama/glm-5",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_410",
+      "status": "retired",
+      "risk": "Provider reports this model as retired."
+    },
+    {
+      "id": "ollama/gpt-oss:120b",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; official_openai_model_docs",
+      "status": "candidate",
+      "risk": "Supports tools and structured outputs, but needs MetaGPT phase tests on the connected Ollama route."
+    },
+    {
+      "id": "ollama/kimi-k2.5",
+      "enabled": false,
+      "routes": {},
+      "evidence": "artificial_analysis_independent; local_403",
+      "status": "subscription_required",
+      "risk": "Cannot be used by this route without an Ollama subscription."
+    },
+    {
+      "id": "ollama/minimax-m2.5",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "Working chat route; requires comparative phase tests before routing."
+    },
+    {
+      "id": "ollama/minimax-m3",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_chat_smoke; artificial_analysis_independent",
+      "status": "candidate",
+      "risk": "Working alternate provider route; compare with M2.7 before promotion."
+    },
+    {
+      "id": "ollama/qwen3.5",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_403",
+      "status": "subscription_required",
+      "risk": "Cannot be used by this route without an Ollama subscription."
+    },
+    {
+      "id": "openrouter/google/gemma-4-31b-it:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_google_hosted_gemma; artificial_analysis_independent; local_429",
+      "status": "temporary_unavailable",
+      "risk": "Free upstream route was rate-limited; direct Gemini route did work."
+    },
+    {
+      "id": "openrouter/google/lyria-3-clip-preview",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_google_music_generation; local_502",
+      "status": "incompatible",
+      "risk": "Audio/music generation model, not a MetaGPT text agent."
+    },
+    {
+      "id": "openrouter/google/lyria-3-pro-preview",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_google_music_generation; local_502",
+      "status": "incompatible",
+      "risk": "Audio/music generation model, not a MetaGPT text agent."
+    },
+    {
+      "id": "openrouter/qwen/qwen3-coder:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "official_qwen_agentic_coding; local_429",
+      "status": "temporary_unavailable",
+      "risk": "Strong coding candidate, but the free route was rate-limited and lacks local phase evidence."
+    },
+    {
+      "id": "openrouter/qwen/qwen3-next-80b-a3b-instruct:free",
+      "enabled": false,
+      "routes": {},
+      "evidence": "artificial_analysis_independent; local_429",
+      "status": "temporary_unavailable",
+      "risk": "Fast long-context generalist, but its free route was rate-limited and it is not coding-specialized."
+    },
+    {
+      "id": "qd/ultimate",
+      "enabled": false,
+      "routes": {},
+      "evidence": "local_timeout",
+      "status": "unresolved",
+      "risk": "No provider documentation or successful chat health check; retain only for future investigation."
     }
   ]
 }

@@ -193,3 +193,39 @@ Foi validada tambem a classificacao por papel e atividade:
 
 O registro nao promove modelos novos automaticamente. A promocao exige pesquisa de fontes oficiais e independentes, seguida de tres rodadas comparaveis com artefatos e testes aprovados.
 
+## Revisao dos 23 modelos pendentes do catalogo
+
+Em 2026-07-16, os 23 IDs que estavam presentes no catalogo do 9Router e ausentes do registro foram classificados. A revisao combina o smoke local ja arquivado, documentacao primaria e, quando disponivel, Artificial Analysis. O status `candidate` nao habilita roteamento: ele apenas identifica uma rota que pode entrar no proximo experimento controlado.
+
+| Modelo | Teste local | Evidencia externa | Decisao para MetaGPT |
+| --- | --- | --- | --- |
+| `gemini/gemini-3.1-pro-preview` | HTTP 429 | A pagina e o model card da Google declaram 1M de entrada, 64K de saida, function calling, structured output, code execution e foco em agentic/coding. [Fonte](https://deepmind.google/models/gemini/pro/) | `temporary_unavailable`; nao pode ser selecionado ate a quota responder. |
+| `gemini/gemini-3-flash-preview` | timeout em 30 s | A Google posiciona Gemini 3 Flash para fluxos agentic e multimodais de baixa latencia. [Fonte](https://deepmind.google/technologies/gemini/flash/) | `temporary_unavailable`; retestar com timeout curto antes de fase real. |
+| `gemini/gemma-4-31b-it` | WORKING | A Google oferece `gemma-4-31b-it` na Gemini API; a avaliacao independente lista indice de inteligencia 29 para a variante de raciocinio. [Fontes](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api) e [Artificial Analysis](https://artificialanalysis.ai/models/gemma-4-31b/). | `candidate`; bom para teste de tarefa delimitada, ainda sem fase MetaGPT. |
+| `nvidia/deepseek-ai/deepseek-v4-pro` | WORKING | Artificial Analysis informa indice 41 e contexto de 1M para a rota Pro; o resultado depende da configuracao de esforco e do provedor. [Fonte](https://artificialanalysis.ai/models/deepseek-v4-pro-high/) | `candidate`; comparar contra DeepSeek Flash em arquitetura/revisao com teto de saida. |
+| `nvidia/minimaxai/minimax-m2.7` | WORKING | Artificial Analysis lista indice 38 para M2.7; a comparacao publicada usa um indice composto que inclui Terminal-Bench, SciCode e outros testes. [Fontes](https://artificialanalysis.ai/models/minimax-m2-7) e [metodologia](https://artificialanalysis.ai/models/comparisons/glm-5-2-vs-minimax-m2-7). | `candidate`; exigir JSON e testes de fase antes de rota automatica. |
+| `nvidia/minimaxai/minimax-m3` | HTTP 400, funcao degradada | A familia tem evidencia externa, mas a funcao da conta estava degradada. | `misconfigured`; nao testar novamente ate o health check recuperar. |
+| `nvidia/moonshotai/kimi-k2.6` | HTTP 404 | A comparacao independente posiciona K2.6 acima de K2.5 em indice atual, mas isso nao corrige a ausencia da funcao no provedor conectado. [Fonte](https://artificialanalysis.ai/models/comparisons/kimi-k2-6-vs-kimi-k2-5) | `misconfigured`; requer correcao no provedor, nao troca de chave. |
+| `nvidia/nemotron-3-ultra-550b-a55b` | HTTP 404 | O modelo possui evidencia independente, mas somente o alias OpenRouter passou localmente. | `misconfigured`; usar exclusivamente `openrouter/nvidia/nemotron-3-ultra-550b-a55b:free`. |
+| `nvidia/parakeet-ctc-1.1b-asr` | HTTP 404 no chat | A NVIDIA documenta Parakeet CTC 1.1B como ASR, isto e, transcricao de fala para texto. [Fonte](https://docs.nvidia.com/nemo/speech/nightly/asr/asr_checkpoints.html) | `incompatible`; nao e modelo de chat/codigo para MetaGPT. |
+| `nvidia/z-ai/glm-5.2` | WORKING | Artificial Analysis o descreve como lider open-weight em sua avaliacao da epoca e registra contexto de 1M; a analise tambem alerta para saidas muito longas em tarefas. [Fonte](https://artificialanalysis.ai/articles/glm-5-2-is-the-new-leading-open-weights-model-on-the-artificial-analysis-intelligence-index/) | `candidate`; testar somente com orcamento de saida e criterios objetivos. |
+| `ollama/glm-4.7-flash` | HTTP 404 | Nao ha modelo servido nessa rota local. | `misconfigured`; remover ou corrigir o catalogo do provedor. |
+| `ollama/glm-5` | HTTP 410 | O proprio provedor informou aposentadoria em 2026-07-15. | `retired`; nao usar. |
+| `ollama/gpt-oss:120b` | WORKING | A documentacao da OpenAI confirma function calling e structured outputs para gpt-oss-120b. [Fonte](https://developers.openai.com/api/docs/models/gpt-oss-120b) | `candidate`; adequado para experimento de JSON/tools na rota Ollama. |
+| `ollama/kimi-k2.5` | HTTP 403 | O modelo exige assinatura no provedor conectado. | `subscription_required`; nao selecionar enquanto indisponivel. |
+| `ollama/minimax-m2.5` | WORKING | A pagina do provedor Artificial Analysis permite comparar M2.5, M2.7 e M3, mas resultados podem variar por versao/effort. [Fonte](https://artificialanalysis.ai/providers/minimax) | `candidate`; usar apenas em comparativo com M2.7/M3, nao como fallback padrao. |
+| `ollama/minimax-m3` | WORKING | A mesma fonte aponta melhoria da familia M3, mas o teste local ainda foi apenas chat curto. [Fonte](https://artificialanalysis.ai/providers/minimax) | `candidate`; comparar com M2.7 em fase identica. |
+| `ollama/qwen3.5` | HTTP 403 | O modelo exige assinatura no provedor conectado. | `subscription_required`; nao selecionar enquanto indisponivel. |
+| `openrouter/google/gemma-4-31b-it:free` | HTTP 429 | O modelo e oficialmente hospedado pela Gemini API e tem dados independentes, mas a rota gratuita estava limitada. | `temporary_unavailable`; o alias direto Gemini e o caminho de teste atual. |
+| `openrouter/google/lyria-3-clip-preview` | HTTP 502 | Lyria 3 gera musica a partir de texto, com saida de audio e letras. [Fonte](https://deepmind.google/models/model-cards/lyria-3/) | `incompatible`; nao e agente textual MetaGPT. |
+| `openrouter/google/lyria-3-pro-preview` | HTTP 502 | Mesma familia de geracao de musica. [Fonte](https://deepmind.google/models/lyria/) | `incompatible`; nao e agente textual MetaGPT. |
+| `openrouter/qwen/qwen3-coder:free` | HTTP 429 | Qwen descreve Qwen3-Coder 480B-A35B como modelo para coding, tools e agentes, com 256K nativo e 1M por extrapolacao. [Fonte](https://qwenlm.github.io/blog/qwen3-coder/) | `temporary_unavailable`; candidato forte para implementacao apos a rota gratuita estabilizar e passar tres fases. |
+| `openrouter/qwen/qwen3-next-80b-a3b-instruct:free` | HTTP 429 | Artificial Analysis registra 262K de contexto e alta velocidade, mas como variante instrutiva nao focada em coding agent. [Fonte](https://artificialanalysis.ai/models/qwen3-next-80b-a3b-instruct/) | `temporary_unavailable`; reavaliar para tarefas gerais e rapidas, nao promover para implementacao. |
+| `qd/ultimate` | timeout em 30 s | Nao foi encontrada documentacao primaria verificavel nem resposta de chat. | `unresolved`; manter fora da matriz ate haver fornecedor, modalidade e health check claros. |
+
+### Resultado da revisao
+
+- Foram resolvidos os 23 itens pendentes do catalogo: sete viraram `candidate`, cinco ficaram `temporary_unavailable`, seis `misconfigured` ou `subscription_required`, tres `incompatible`, um `retired` e um `unresolved`.
+- Nenhum candidato foi habilitado. A regra continua sendo tres fases comparaveis, com testes aprovados e sem falha recorrente de JSON/tools, antes de alterar prioridades.
+- Os modelos ja habilitados continuam sendo os seis que ja tinham smoke local e justificativa de rota. O catalogo deixa de confundir modelos de audio, rotas retiradas e modelos apenas listados com alternativas utilizaveis pelo MetaGPT.
+
